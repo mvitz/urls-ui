@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.codahale.metrics.Gauge;
+import com.codahale.metrics.MetricRegistry;
 import com.innoq.urls.ui.web.RequestIdFilter;
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
@@ -27,8 +29,14 @@ public final class HashService {
     private final RestTemplate rest;
 
     @Autowired
-    public HashService(RestTemplate rest) {
+    public HashService(RestTemplate rest, MetricRegistry metrics) {
         this.rest = rest;
+        metrics.register(MetricRegistry.name(HashService.class, "cache", "size"), new Gauge<Integer>() {
+            @Override
+            public Integer getValue() {
+                return cache.size();
+            }
+        });
     }
 
     public String hash(String url) {
