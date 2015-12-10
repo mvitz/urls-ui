@@ -3,11 +3,17 @@
   <Appenders>
     <Console name="Console" target="SYSTEM_OUT">
       <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} %X - %msg%n"/>
-     </Console>
+    </Console>
+    <Console name="Gelf" target="SYSTEM_OUT">
+      <GelfLayout host="ui.urls" compressionType="GZIP" compressionThreshold="1024000"/>
+    </Console>
   </Appenders>
   <Loggers>
     <Root level="INFO">
       <AppenderRef ref="Console"/>
     </Root>
+    <Logger name="com.innoq" level="INFO">
+      <AppenderRef ref="Gelf"/>
+    </Logger>
   </Loggers>
 </Configuration>
