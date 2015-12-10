@@ -17,8 +17,8 @@ import org.springframework.stereotype.Component;
 @Component
 public final class RequestIdFilter implements Filter {
 
-    private static final String REQUEST_ID_HEADER = "x-request-id";
-    private static final String REQUEST_ID = "requestId";
+    public static final String REQUEST_ID_HEADER = "x-request-id";
+    public static final String REQUEST_ID = "requestId";
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {

@@ -6,12 +6,15 @@ import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.innoq.urls.ui.web.RequestIdFilter;
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 
@@ -52,7 +55,9 @@ public final class HashService {
 
         @Override
         protected String run() throws Exception {
-            final HttpEntity<String> request = new HttpEntity<String>(url);
+            final HttpHeaders headers = new HttpHeaders();
+            headers.add(RequestIdFilter.REQUEST_ID_HEADER, MDC.get(RequestIdFilter.REQUEST_ID));
+            final HttpEntity<String> request = new HttpEntity<>(url, headers);
             final ResponseEntity<String> response = client.postForEntity("http://localhost:8081", request, String.class);
             return response.getBody();
         }
