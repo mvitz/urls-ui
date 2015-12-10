@@ -4,9 +4,9 @@
     <Console name="Console" target="SYSTEM_OUT">
       <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} %X - %msg%n"/>
     </Console>
-    <Console name="Gelf" target="SYSTEM_OUT">
-      <GelfLayout host="ui.urls" compressionType="GZIP" compressionThreshold="1024000"/>
-    </Console>
+    <Socket name="Gelf" protocol="udp" host="192.168.99.100" port="12201">
+      <GelfLayout host="ui.urls" compressionType="GZIP" compressionThreshold="1"/>
+    </Socket>
   </Appenders>
   <Loggers>
     <Root level="INFO">

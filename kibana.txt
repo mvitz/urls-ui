@@ -1,0 +1,7 @@
+Vertical Bar Chart
+logger=com.innoq.urls.ui.domain.HashService AND message: Cache
+X-AXIS: Date Histogram
+Split Bars: Filter
+Filter 1: message: hit
+Filter 2: message: miss
+

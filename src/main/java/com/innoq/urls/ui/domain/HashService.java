@@ -23,6 +23,7 @@ public final class HashService {
 
     private static final Logger LOGGER = LogManager.getLogger(HashService.class);
 
+    private final Map<String, String> cache = new HashMap<>();
     private final RestTemplate rest;
 
     @Autowired
@@ -37,9 +38,19 @@ public final class HashService {
     }
 
     public Optional<String> resolve(String hash) {
-        final Optional<String> value = new ResolveCommand(rest, hash).execute();
-        LOGGER.info("'{}' resolved to '{}'", hash, value.orElse(null));
-        return value;
+        final String cachedValue = cache.get(hash);
+        if (cachedValue == null) {
+            LOGGER.info("Cache miss");
+            final Optional<String> value = new ResolveCommand(rest, hash).execute();
+            LOGGER.info("'{}' resolved to '{}'", hash, value.orElse(null));
+            if (value.isPresent()) {
+                cache.put(hash, value.get());
+            }
+            return value;
+        } else {
+            LOGGER.info("Cache hit");
+            return Optional.of(cachedValue);
+        }
     }
 
     private static final class HashCommand extends HystrixCommand<String> {
