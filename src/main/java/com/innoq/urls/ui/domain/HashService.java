@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,8 @@ import com.netflix.hystrix.HystrixCommandGroupKey;
 @Service
 public final class HashService {
 
+    private static final Logger LOGGER = LogManager.getLogger(HashService.class);
+
     private final RestTemplate rest;
 
     @Autowired
@@ -24,11 +28,15 @@ public final class HashService {
     }
 
     public String hash(String url) {
-        return new HashCommand(rest, url).execute();
+        final String hash = new HashCommand(rest, url).execute();
+        LOGGER.info("'{}' hashed as '{}'", url, hash);
+        return hash;
     }
 
     public Optional<String> resolve(String hash) {
-        return new ResolveCommand(rest, hash).execute();
+        final Optional<String> value = new ResolveCommand(rest, hash).execute();
+        LOGGER.info("'{}' resolved to '{}'", hash, value.orElse(null));
+        return value;
     }
 
     private static final class HashCommand extends HystrixCommand<String> {
