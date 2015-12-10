@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <title>URLS - A simple URL shortener</title>
+  </head>
+
+  <body>
+
+    <h1>URLS - A simple URL shortener</h1>
+
+    <form th:object="${url}" th:action="@{/}" method="post">
+      <label>
+        URL:
+        <input type="text" th:field="*{value}" th:errorclass="red" />
+      </label>
+      <ul class="errorlist" th:if="${#fields.hasErrors('value')}">
+        <li th:each="err : ${#fields.errors('value')}" th:text="${err}" />
+      </ul>
+      <input type="submit" value="Shorten!" />
+    </form>
+
+    <th:block th:if="${message != null}">
+      <p th:text="${message}"></p>
+    </th:block>
+
+  </body>
+</html>
